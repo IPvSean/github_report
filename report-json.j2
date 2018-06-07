@@ -1,6 +1,6 @@
 {
   "report_date":"{{datetime}}",
-  "members_total":"{{members.json|length}}",
+  "members_total":"{{members.results|join(',',attribute='json')|length}}",
   "public_repos":"{{repos_output.json|length}}",
 {% for repo in views_top_repo.results %}
   "top_repo_{{loop.index}}_name": "{{sorted_dict[loop.index0].name}}",

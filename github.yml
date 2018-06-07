@@ -1,0 +1,104 @@
+- name: create github report for {{github}}
+  hosts: localhost
+  connection: local
+  become: no
+  gather_facts: no
+  tasks:
+    - name: Include vars from previous run
+      include_vars:
+        file: lastrun.json
+        name: lastrun
+
+    - name: set datetime of local ansible control node
+      set_fact:
+        datetime: "{{ lookup('pipe','date +%Y-%m-%d-%H-%M') }}"
+
+    - name: create time-stamped directory
+      file:
+        path: "{{ playbook_dir }}/report-{{ datetime }}"
+        state: directory
+
+    - name: create JSON folder in the time-stamped directory
+      file:
+        path: "{{ playbook_dir }}/report-{{ datetime }}/json"
+        state: directory
+
+    - name: grab organization members data from github API
+      uri:
+        url: "https://api.github.com/orgs/{{github}}/members"
+        method: GET
+        force_basic_auth: yes
+        user: "{{login_info.username}}"
+        password: "{{login_info.password}}"
+        validate_certs: False
+      register: members
+
+    - name: copy members to time-stamped folder for future use
+      copy:
+        content: "{{members | to_nice_json}}"
+        dest: "{{ playbook_dir }}/report-{{ datetime }}/json/members-{{ datetime }}.json"
+
+    - name: grab repo JSON data from github API
+      uri:
+        url: "https://api.github.com/orgs/{{github}}/repos"
+        method: GET
+        validate_certs: False
+      register: repos_output
+
+    - name: set sorted dict fact
+      set_fact:
+        sorted_dict: "{{ repos_output.json|sort(true,attribute='stargazers_count') }}"
+
+    - name: copy sorted dict of repo information to time-stamped folder for future use
+      copy:
+        content: "{{ sorted_dict | to_nice_json}}"
+        dest: "{{ playbook_dir }}/report-{{ datetime }}/json/sorted_dict-{{ datetime }}.json"
+
+    - name: grab total views for top {{top_repos}} repos
+      uri:
+        url: "https://api.github.com/repos/{{github}}/{{sorted_dict[item|int].name}}/traffic/views"
+        method: GET
+        user: "{{login_info.username}}"
+        password: "{{login_info.password}}"
+        force_basic_auth: yes
+        validate_certs: False
+      register: views_top_repo
+      with_sequence: start=0 end={{top_repos|int - 1}}
+
+    - name: copy total views repo for top {{top_repos}} repos to time-stamped folder for future use
+      copy:
+        content: "{{views_top_repo | to_nice_json}}"
+        dest: "{{ playbook_dir }}/report-{{ datetime }}/json/views_top_repo-{{ datetime }}.json"
+
+    - name: grab clone info for top {{top_repos}} repos
+      uri:
+        url: "https://api.github.com/repos/{{github}}/{{sorted_dict[item|int].name}}/traffic/clones"
+        method: GET
+        user: "{{login_info.username}}"
+        password: "{{login_info.password}}"
+        force_basic_auth: yes
+        validate_certs: False
+      register: clones_top_repo
+      with_sequence: start=0 end={{top_repos|int - 1}}
+
+    - name: copy clone info for top {{top_repos}} repos to time-stamped folder for future use
+      copy:
+        content: "{{clones_top_repo | to_nice_json}}"
+        dest: "{{ playbook_dir }}/report-{{ datetime }}/json/clones_top_repo-{{ datetime }}.json"
+
+    # - name: debug repos_output
+    #   debug:
+    #     var: members
+
+    - name: generate JSON report
+      template:
+        src: report-json.j2
+        dest: "{{item}}"
+      loop:
+        - "{{ playbook_dir }}/report-{{ datetime }}/report-{{ datetime }}.json"
+        - "{{ playbook_dir }}/lastrun.json"
+
+    - name: generate HTML report
+      template:
+        src: report.j2
+        dest: "{{ playbook_dir }}/report-{{ datetime }}/report-{{ datetime }}.html"

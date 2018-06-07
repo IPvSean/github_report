@@ -1,0 +1,18 @@
+{
+  "report_date":"{{datetime}}",
+  "members_total":"{{members.json|length}}",
+  "public_repos":"{{repos_output.json|length}}",
+{% for repo in views_top_repo.results %}
+  "top_repo_{{loop.index}}_name": "{{sorted_dict[loop.index0].name}}",
+  "top_repo_{{loop.index}}_views":"{{repo.json.count}}",
+  "top_repo_{{loop.index}}_clones":"{{clones_top_repo.results[loop.index0].json.count}}",
+{% endfor %}
+{% for repo in sorted_dict %}
+  "{{repo.name}}":  {
+    "stargazers_count":"{{repo.stargazers_count}}",
+    "forks_count":"{{repo.forks_count}}",
+    "watchers":"{{repo.watchers}}"
+  }  {% if not loop.last %},{% endif %}
+
+{% endfor %}
+}

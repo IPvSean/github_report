@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="../css/main.css">
+</head>
+<body>
+<div id="tableframe">
+<h2>Network Automation Github Community Stats</h2>
+<p>This report was run on {{datetime}}</p>
+<p>Compared against last repot on {{lastrun.report_date}}</p>
+<br>
+<div id="breakdown">
+<h3>Top Level Data</h3>
+<table>
+<tr>
+  <td>Total Members</td>
+  <td>{{members.json|length}} {% set diff = members.json|length|int - lastrun.members_total|int %} {% if diff != 0 %}{% if diff > 0 %} <font color="green">+{% else %}<font color="red">{% endif %}{{diff}}</font>{% endif %}</td>
+</tr>
+<tr>
+  <td>Public Repos</td>
+  <td>{{repos_output.json|length}} {% set diff = repos_output.json|length|int - lastrun.public_repos|int %} {% if diff != 0 %}{% if diff > 0 %} <font color="green">+{% else %}<font color="red">{% endif %}{{diff}}</font>{% endif %}</td>
+
+</tr>
+</table>
+
+<h3>Stats for Top {{top_repos}} Repos over last 14 days</h3>
+<table>
+<thead>
+<tr>
+    <th>Repo Name</th>
+    <th>Views</th>
+    <th>Clones</th>
+</tr>
+</thead>
+{% for repo in views_top_repo.results %}
+<tr>
+<td>{{sorted_dict[loop.index0].name}}</td>
+<td>{{repo.json.count}}</td>
+<td>{{clones_top_repo.results[loop.index0].json.count}}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+<div id="total_stats">
+<h3>All repo data</h3>
+
+<table>
+<thead>
+<tr>
+    <th>Repo Name</th>
+    <th>Stars</th>
+    <th>Forks</th>
+</tr>
+</thead>
+{% for repo in sorted_dict %}
+<tr>
+<td><a target="_new" href="{{repo.html_url}}">{{repo.name}}</a></td>
+<td>{{repo.stargazers_count}} {% set diff = repo.stargazers_count|int - lastrun[repo.name].stargazers_count|int %}{% if diff != 0 %}{% if diff > 0 %} <font color="green">+{% else %}<font color="red">{% endif %}{{diff}}</font>{% endif %}</td>
+<td>{{repo.forks_count}} {% set diff = repo.forks_count|int - lastrun[repo.name].forks_count|int %} {% if diff != 0 %}{% if diff > 0 %} <font color="green">+{% else %}<font color="red">{% endif %}{{diff}}</font>{% endif %}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+
+</div>
+
+</body>
+</html>

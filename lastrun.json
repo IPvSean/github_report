@@ -1,26 +1,26 @@
 {
-  "report_date":"2018-06-06-22-13",
-  "members_total":"30",
+  "report_date":"2018-06-07-12-27",
+  "members_total":"83",
   "public_repos":"27",
   "top_repo_1_name": "linklight",
-  "top_repo_1_views":"1390",
-  "top_repo_1_clones":"98",
+  "top_repo_1_views":"1320",
+  "top_repo_1_clones":"113",
   "top_repo_2_name": "ansible-napalm-samples",
-  "top_repo_2_views":"412",
-  "top_repo_2_clones":"6",
+  "top_repo_2_views":"398",
+  "top_repo_2_clones":"5",
   "top_repo_3_name": "ansible_inventory_report",
-  "top_repo_3_views":"434",
-  "top_repo_3_clones":"2",
+  "top_repo_3_views":"398",
+  "top_repo_3_clones":"3",
   "top_repo_4_name": "networking-icons",
-  "top_repo_4_views":"132",
+  "top_repo_4_views":"131",
   "top_repo_4_clones":"1",
   "top_repo_5_name": "ansible-network-parsers",
-  "top_repo_5_views":"243",
+  "top_repo_5_views":"235",
   "top_repo_5_clones":"0",
   "linklight":  {
-    "stargazers_count":"40",
+    "stargazers_count":"39",
     "forks_count":"24",
-    "watchers":"40"
+    "watchers":"39"
   }  ,
   "ansible-napalm-samples":  {
     "stargazers_count":"37",
@@ -29,7 +29,7 @@
   }  ,
   "ansible_inventory_report":  {
     "stargazers_count":"35",
-    "forks_count":"4",
+    "forks_count":"5",
     "watchers":"35"
   }  ,
   "networking-icons":  {

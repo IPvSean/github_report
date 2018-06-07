@@ -25,7 +25,7 @@
 
     - name: grab organization members data from github API
       uri:
-        url: "https://api.github.com/orgs/{{github}}/members"
+        url: "https://api.github.com/orgs/{{github}}/members?per_page=100"
         method: GET
         force_basic_auth: yes
         user: "{{login_info.username}}"

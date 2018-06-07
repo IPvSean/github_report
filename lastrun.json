@@ -1,9 +1,9 @@
 {
-  "report_date":"2018-06-07-12-27",
-  "members_total":"83",
+  "report_date":"2018-06-07-19-55",
+  "members_total":"30",
   "public_repos":"27",
   "top_repo_1_name": "linklight",
-  "top_repo_1_views":"1320",
+  "top_repo_1_views":"1348",
   "top_repo_1_clones":"113",
   "top_repo_2_name": "ansible-napalm-samples",
   "top_repo_2_views":"398",
@@ -15,7 +15,7 @@
   "top_repo_4_views":"131",
   "top_repo_4_clones":"1",
   "top_repo_5_name": "ansible-network-parsers",
-  "top_repo_5_views":"235",
+  "top_repo_5_views":"230",
   "top_repo_5_clones":"0",
   "linklight":  {
     "stargazers_count":"39",

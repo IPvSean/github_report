@@ -1,6 +1,11 @@
+{% set usernumber = [0] %}
+{% for item in range(0,members.results|map(attribute='json')|list|length) %}
+{% if usernumber.append(usernumber.pop() + ((members.results|map(attribute='json')|list)[item])|length) %}
+{% endif %}
+{% endfor %}
 {
   "report_date":"{{datetime}}",
-  "members_total":"{{members.json|length}}",
+  "members_total":"{{usernumber[0]}}",
   "public_repos":"{{repos_output.json|length}}",
 {% for repo in views_top_repo.results %}
   "top_repo_{{loop.index}}_name": "{{sorted_dict[loop.index0].name}}",

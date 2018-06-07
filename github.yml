@@ -23,15 +23,27 @@
         path: "{{ playbook_dir }}/report-{{ datetime }}/json"
         state: directory
 
+    - name: prepare grabbing organization members data from github API
+      uri:
+        url: "https://api.github.com/orgs/{{github}}/members"
+        method: GET
+        force_basic_auth: yes
+        user: "{{login_info.username}}"
+        password: "{{login_info.password}}"
+        validate_certs: False
+      register: memberspages
+
     - name: grab organization members data from github API
       uri:
-        url: "https://api.github.com/orgs/{{github}}/members?per_page=100"
+        url: "https://api.github.com/orgs/{{github}}/members?page={{ item }}"
         method: GET
         force_basic_auth: yes
         user: "{{login_info.username}}"
         password: "{{login_info.password}}"
         validate_certs: False
       register: members
+      when: memberspages.link is defined
+      with_sequence: start=1 end="{{ (memberspages.link|replace('; rel=\"next\", ','')|replace('; rel=\"last\"','')|replace('https://api.github.com/organizations/','')|replace('members?page=','')|replace('>','/')|replace('<','')).split('/')[3] }}"
 
     - name: copy members to time-stamped folder for future use
       copy:
